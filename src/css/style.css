@@ -199,6 +199,29 @@ button {
   margin: auto;
 }
 
+.product-price {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  flex-wrap: wrap;
+}
+
+.product__original-price {
+  text-decoration: line-through;
+  color: var(--light-grey);
+  font-size: var(--small-font);
+  padding: 0;
+}
+
+.product__discount-badge {
+  background-color: var(--tertiary-color);
+  color: white;
+  font-size: var(--small-font);
+  font-weight: bold;
+  padding: 0.2em 0.5em;
+  border-radius: 3px;
+}
+
 .product-detail img {
   width: 100%;
 }
