@@ -191,6 +191,10 @@ button {
   font-size: 1em;
 }
 
+.product-card .product-price {
+  padding: 0;
+}
+
 /* End product list card */
 
 .product-detail {
