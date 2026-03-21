@@ -29,6 +29,15 @@ export function getParam(param) {
   return product;
 }
 
+export function alertMessage(message, scroll = true) {
+  const alert = document.createElement("div");
+  alert.classList.add("alert");
+  alert.innerHTML = `<p>${message}</p><button class="alert-close" type="button">X</button>`;
+  document.querySelector("main").prepend(alert);
+  alert.querySelector(".alert-close").addEventListener("click", () => alert.remove());
+  if (scroll) window.scrollTo(0, 0);
+}
+
 export function renderListWithTemplate(template, parentElement, list, position = "afterbegin", clear = false) {
   const htmlStrings = list.map(template);
   // if clear is true we need to clear out the contents of the parent.

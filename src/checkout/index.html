@@ -8,22 +8,38 @@
 
     <title>Sleep Outside | Checkout</title>
 
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="/css/style.css" />
+
+    <script type="module">
+      import CheckoutProcess from "../js/CheckoutProcess.mjs";
+
+      const checkout = new CheckoutProcess("so-cart", ".order-summary");
+      checkout.init();
+
+      document.querySelector("#checkoutButton").addEventListener("click", (e) => {
+        const form = document.querySelector(".checkout-form");
+        if (form.checkValidity()) {
+          checkout.checkout(form);
+        } else {
+          form.reportValidity();
+        }
+      });
+    </script>
   </head>
 
   <body>
     <header class="divider">
       <div class="logo">
-        <img src="images/noun_Tent_2517.svg" alt="tent image for logo" />
+        <img src="/images/noun_Tent_2517.svg" alt="tent image for logo" />
 
-        <a href="index.html">
+        <a href="/index.html">
           Sleep
           <span class="highlight">Outside</span>
         </a>
       </div>
 
       <div class="cart">
-        <a href="cart/">
+        <a href="../cart/index.html">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
             <path
               d="M18.9 32.6c1.1 2.4 2.5 3.3 5.4 3.3 1.6 0 3.6-0.3 5.9-0.6 3.2-0.5 6.9-1 11.2-1 2.1 0 4.3 0.1 6.4 0.3 2.1 0.1 4.2 0.3 6.1 0.3 3.2 0 5.2-0.4 5.9-1.2 2.7-2.7 2.8-8.8 2.9-14.6 0.1-6.7 0.2-14.5 4.6-18.7 -0.5 0-1 0-1.6 0 -14.2 0-37.5 0-41.1 0C15.6 6.2 14.9 23.6 18.9 32.6z"
@@ -48,9 +64,6 @@
             <path
               d="M60.1 71.4v3.3h-5.2v-3.4c-1.7-0.3-3.3-0.7-4.6-1 -0.9 6.8-1.1 13.3-0.3 14.5 0.4 0.3 2.9 1.1 8 1.1h0c5 0 8.8-0.7 9.7-1.3 0.8-1.3 0.6-7.7-0.4-14.4C65.5 70.5 62.7 71.1 60.1 71.4z"
             />
-
-            <!-- <text x="0" y="115" fill="#000000" font-size="5px" font-weight="bold" font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">Created by Natalia Woodroffe</text>
-            <text x="0" y="120" fill="#000000" font-size="5px" font-weight="bold" font-family="'Helvetica Neue', Helvetica, Arial-Unicode, Arial, Sans-serif">from the Noun Project</text> -->
           </svg>
         </a>
       </div>
@@ -58,7 +71,67 @@
 
     <main class="divider">
       <section class="products">
-        <h2>Review & Place your Order</h2>
+        <h2>Review &amp; Place your Order</h2>
+
+        <form class="checkout-form" novalidate>
+          <fieldset>
+            <legend>Customer Information</legend>
+            <label>
+              First Name
+              <input type="text" name="fname" required />
+            </label>
+            <label>
+              Last Name
+              <input type="text" name="lname" required />
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Shipping Address</legend>
+            <label>
+              Street
+              <input type="text" name="street" required />
+            </label>
+            <label>
+              City
+              <input type="text" name="city" required />
+            </label>
+            <label>
+              State
+              <input type="text" name="state" required />
+            </label>
+            <label>
+              ZIP Code
+              <input type="text" name="zip" required />
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Payment</legend>
+            <label>
+              Card Number
+              <input type="text" name="cardNumber" required />
+            </label>
+            <label>
+              Expiration Date
+              <input type="text" name="expiration" placeholder="MM/YY" required />
+            </label>
+            <label>
+              Security Code
+              <input type="text" name="code" required />
+            </label>
+          </fieldset>
+
+          <div class="order-summary">
+            <h3>Order Summary</h3>
+            <p>Subtotal: <span id="subtotal"></span></p>
+            <p>Shipping: <span id="shipping"></span></p>
+            <p>Tax (6%): <span id="tax"></span></p>
+            <p><strong>Order Total: <span id="order-total"></span></strong></p>
+          </div>
+
+          <button type="button" id="checkoutButton" class="checkout-button">Place Order</button>
+        </form>
       </section>
     </main>
 
