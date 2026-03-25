@@ -1,4 +1,4 @@
-import { getLocalStorage, loadHeaderFooter } from "./utils.mjs";
+import { getLocalStorage, setLocalStorage, loadHeaderFooter } from "./utils.mjs";
 
 loadHeaderFooter();
 
@@ -12,6 +12,13 @@ function renderCartContents() {
 
   const htmlItems = cartItems.map((item) => cartItemTemplate(item));
   document.querySelector(".product-list").innerHTML = htmlItems.join("");
+  const btns = document.querySelectorAll(".remove-btn");
+  btns.forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+      removeCartItem(e.target.id);
+      console.log("Button clicked!");
+    })
+  })
 
   calculateCartTotal(cartItems);
 }
@@ -30,6 +37,7 @@ function cartItemTemplate(item) {
   <p class="cart-card__color">${item.Colors[0].ColorName}</p>
   <p class="cart-card__quantity">qty: 1</p>
   <p class="cart-card__price">$${item.FinalPrice}</p>
+  <button id="${item.Id}" class="remove-btn">X</button>
 </li>`;
 
   return newItem;
@@ -48,6 +56,15 @@ function calculateCartTotal(cartItems) {
 
     cartTotal.innerHTML = `Total: $${total.toFixed(2)}`;
   }
+}
+
+function removeCartItem(item) {
+  let cartItems = getLocalStorage("so-cart");
+  const index = cartItems.findIndex(id => id.Id === item);
+  cartItems.splice(index, 1);
+  setLocalStorage("so-cart", cartItems);
+  console.log(index);
+  renderCartContents();
 }
 
 renderCartContents();
