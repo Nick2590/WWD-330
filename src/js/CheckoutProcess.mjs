@@ -1,4 +1,4 @@
-import { getLocalStorage, formDataToJSON } from "./utils.mjs";
+import { formDataToJSON, getCartItems } from "./utils.mjs";
 import ExternalServices from "./ExternalServices.mjs";
 
 function packageItems(items) {
@@ -14,7 +14,7 @@ export default class CheckoutProcess {
   constructor(cartKey, summarySelector) {
     this.cartKey = cartKey;
     this.summaryElement = document.querySelector(summarySelector);
-    this.cartItems = getLocalStorage(cartKey) || [];
+    this.cartItems = getCartItems();
     this.externalServices = new ExternalServices();
     this.subtotal = 0;
     this.tax = 0;

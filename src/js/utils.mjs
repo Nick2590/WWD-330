@@ -6,6 +6,20 @@ export function getLocalStorage(key) {
   return JSON.parse(localStorage.getItem(key));
 }
 
+export function getCartItems() {
+  const storedCart = getLocalStorage("so-cart");
+
+  if (Array.isArray(storedCart)) {
+    return storedCart;
+  }
+
+  if (storedCart && typeof storedCart === "object") {
+    return [storedCart];
+  }
+
+  return [];
+}
+
 export function setLocalStorage(key, data) {
   localStorage.setItem(key, JSON.stringify(data));
 }
@@ -74,7 +88,7 @@ export async function loadHeaderFooter() {
 }
 
 export function updateCartCount() {
-  const cartItems = getLocalStorage("so-cart") || [];
+  const cartItems = getCartItems();
   const cartCount = document.getElementById("cart-count");
   if (cartCount) {
     cartCount.textContent = cartItems.length;

@@ -1,14 +1,9 @@
-import { getLocalStorage, loadHeaderFooter } from "./utils.mjs";
+import { getCartItems, loadHeaderFooter } from "./utils.mjs";
 
 loadHeaderFooter();
 
 function renderCartContents() {
-  let cartItems = getLocalStorage("so-cart");
-
-  // Ensure cartItems is always an array
-  if (!Array.isArray(cartItems)) {
-    cartItems = [];
-  }
+  const cartItems = getCartItems();
 
   const htmlItems = cartItems.map((item) => cartItemTemplate(item));
   document.querySelector(".product-list").innerHTML = htmlItems.join("");
