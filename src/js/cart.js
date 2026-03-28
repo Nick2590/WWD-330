@@ -1,4 +1,9 @@
 import { getCartItems, loadHeaderFooter, updateCartCount, setLocalStorage } from "./utils.mjs";
+import {
+  getLocalStorage,
+  setLocalStorage,
+  loadHeaderFooter,
+} from "./utils.mjs";
 
 loadHeaderFooter().then(() => {
   updateCartCount();
@@ -9,6 +14,13 @@ function renderCartContents() {
 
   const htmlItems = cartItems.map((item, index) => cartItemTemplate(item, index));
   document.querySelector(".product-list").innerHTML = htmlItems.join("");
+  const btns = document.querySelectorAll(".remove-btn");
+  btns.forEach(function (btn) {
+    btn.addEventListener("click", function (e) {
+      removeCartItem(e.target.id);
+      console.log("Button clicked!");
+    });
+  });
 
   calculateCartTotal(cartItems);
   
@@ -103,6 +115,15 @@ function calculateCartTotal(cartItems) {
     cartFooter.classList.add("hide");
     document.querySelector(".product-list").innerHTML = "<p>Your cart is empty</p>";
   }
+}
+
+function removeCartItem(item) {
+  let cartItems = getLocalStorage("so-cart");
+  const index = cartItems.findIndex((id) => id.Id === item);
+  cartItems.splice(index, 1);
+  setLocalStorage("so-cart", cartItems);
+  console.log(index);
+  renderCartContents();
 }
 
 renderCartContents();
