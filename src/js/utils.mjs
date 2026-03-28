@@ -91,7 +91,10 @@ export function updateCartCount() {
   const cartItems = getCartItems();
   const cartCount = document.getElementById("cart-count");
   if (cartCount) {
-    cartCount.textContent = cartItems.length;
+    const totalItems = cartItems.reduce((sum, item) => {
+      return sum + Number(item.quantity || 1);
+    }, 0);
+    cartCount.textContent = totalItems;
   }
 }
 

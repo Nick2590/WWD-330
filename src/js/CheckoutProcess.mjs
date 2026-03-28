@@ -6,7 +6,7 @@ function packageItems(items) {
     id: item.Id,
     name: item.Name,
     price: item.FinalPrice,
-    quantity: 1
+    quantity: Number(item.quantity || 1)
   }));
 }
 
@@ -36,7 +36,7 @@ export default class CheckoutProcess {
 
   calculateSubtotal() {
     this.subtotal = this.cartItems.reduce((total, item) => {
-      return total + Number(item.FinalPrice);
+      return total + Number(item.FinalPrice) * Number(item.quantity || 1);
     }, 0);
 
     const subtotalElement = document.querySelector("#subtotal");
@@ -46,7 +46,9 @@ export default class CheckoutProcess {
   }
 
   calculateOrderTotal() {
-    const itemCount = this.cartItems.length;
+    const itemCount = this.cartItems.reduce((total, item) => {
+      return total + Number(item.quantity || 1);
+    }, 0);
 
     this.tax = this.subtotal * 0.06;
     this.shipping = itemCount > 0 ? 10 + (itemCount - 1) * 2 : 0;
