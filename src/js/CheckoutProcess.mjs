@@ -1,4 +1,4 @@
-import { formDataToJSON, getCartItems } from "./utils.mjs";
+import { formDataToJSON, getCartItems, alertMessage } from "./utils.mjs";
 import ExternalServices from "./ExternalServices.mjs";
 
 function packageItems(items) {
@@ -70,6 +70,7 @@ export default class CheckoutProcess {
   }
 
   async checkout(form) {
+    console.log("Checkout started");
     const formData = new FormData(form);
     const orderData = formDataToJSON(formData);
 
@@ -79,12 +80,34 @@ export default class CheckoutProcess {
     orderData.shipping = this.shipping;
     orderData.tax = this.tax.toFixed(2);
 
+    console.log("Sending order data:", orderData);
+
     try {
       const result = await this.externalServices.checkout(orderData);
-      console.log("Order submitted:", result);
+      console.log("Checkout API result:", result);
+      console.log("Redirecting to /checkout/success.html");
+
+      localStorage.removeItem(this.cartKey);
+      window.location.href = "/checkout/success.html";
+
       return result;
     } catch (error) {
       console.error("Checkout failed:", error);
+      console.error("Error details:", JSON.stringify(error, null, 2));
+
+      let message = "Sorry, your order could not be completed.";
+
+      if (error?.message) {
+        if (typeof error.message === "string") {
+          message = error.message;
+        } else if (Array.isArray(error.message)) {
+          message = error.message.join("<br>");
+        } else if (typeof error.message === "object") {
+          message = Object.values(error.message).join("<br>");
+        }
+      }
+
+      alertMessage(message);
     }
   }
 }

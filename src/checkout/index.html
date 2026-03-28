@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sleep Outside | Checkout</title>
   <link rel="stylesheet" href="/css/style.css" />
-  <script type="module" src="/js/checkout.js"></script>
 </head>
 <body>
   <header class="divider" id="main-header"></header>
@@ -35,6 +34,12 @@
 
           <label for="zip">Zip Code</label>
           <input type="text" id="zip" name="zip" required />
+
+          <label for="phone">Phone</label>
+          <input type="tel" id="phone" name="phone" required />
+
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required />
         </fieldset>
 
         <fieldset>
@@ -80,5 +85,7 @@
   </main>
 
   <footer id="main-footer"></footer>
+  
+  <script type="module" src="/js/checkout.js"></script>
 </body>
 </html>

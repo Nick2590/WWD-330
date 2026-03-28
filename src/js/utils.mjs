@@ -94,3 +94,7 @@ export function updateCartCount() {
     cartCount.textContent = cartItems.length;
   }
 }
+
+export function alertMessage(message, duration = 3000) {
+  alert(message);
+}
