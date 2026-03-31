@@ -1,4 +1,4 @@
-import { formDataToJSON, getCartItems, alertMessage } from "./utils.mjs";
+import { formDataToJSON, getCartItems, alertMessage, removeAllAlerts } from "./utils.mjs";
 import ExternalServices from "./ExternalServices.mjs";
 
 function packageItems(items) {
@@ -95,21 +95,22 @@ export default class CheckoutProcess {
       return result;
     } catch (error) {
       console.error("Checkout failed:", error);
-      console.error("Error details:", JSON.stringify(error, null, 2));
 
-      let message = "Sorry, your order could not be completed.";
+      // Remove any existing alerts
+      removeAllAlerts();
 
-      if (error?.message) {
-        if (typeof error.message === "string") {
-          message = error.message;
-        } else if (Array.isArray(error.message)) {
-          message = error.message.join("<br>");
-        } else if (typeof error.message === "object") {
-          message = Object.values(error.message).join("<br>");
+      if (error?.name === "servicesError") {
+        const messages = error.message;
+        if (typeof messages === "object") {
+          for (const key in messages) {
+            alertMessage(messages[key]);
+          }
+        } else if (typeof messages === "string") {
+          alertMessage(messages);
         }
+      } else {
+        alertMessage("Sorry, your order could not be completed.");
       }
-
-      alertMessage(message);
     }
   }
 }

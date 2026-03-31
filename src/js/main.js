@@ -1,5 +1,5 @@
 import { loadHeaderFooter, updateCartCount } from "./utils.mjs";
-import ProductData from "./ProductData.mjs";
+import ExternalServices from "./ExternalServices.mjs";
 import ProductList from "./ProductList.mjs";
 import Alert from "./Alert.js";
 
@@ -9,7 +9,7 @@ const mainElement = document.querySelector("main");
 const alertList = new Alert("/json/alert.json", mainElement);
 alertList.init();
 
-const dataSource = new ProductData("tents");
+const dataSource = new ExternalServices("tents");
 const element = document.querySelector(".product-list");
 const productList = new ProductList("Tents", dataSource, element);
 
