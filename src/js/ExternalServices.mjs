@@ -14,6 +14,22 @@ async function convertToJson(res) {
 }
 
 export default class ExternalServices {
+  constructor(category) {
+    this.category = category;
+    this.path = `/json/${this.category}.json`;
+  }
+
+  getData() {
+    return fetch(this.path)
+      .then(convertToJson)
+      .then((data) => data);
+  }
+
+  async findProductById(id) {
+    const products = await this.getData();
+    return products.find((item) => item.Id === id);
+  }
+
   async checkout(payload) {
     const url = `${baseURL}/checkout`;
 
