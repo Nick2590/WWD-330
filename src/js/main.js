@@ -15,7 +15,10 @@ const productList = new ProductList("Tents", dataSource, element);
 
 productList.init();
 
+document.getElementById("sort-select").addEventListener("change", (e) => {
+  productList.sort(e.target.value);
+});
+
 loadHeaderFooter().then(() => {
   updateCartCount();
 });
-productList.init();
