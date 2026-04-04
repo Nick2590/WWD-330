@@ -299,3 +299,43 @@ footer {
   height: 220px;
   object-fit: contain;
 }
+
+.breadcrumbs {
+  max-width: 500px;
+  margin: 1rem auto 0;
+  padding: 0 1rem;
+  font-size: var(--small-font);
+}
+
+.breadcrumbs__list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0;
+  margin: 0;
+}
+
+.breadcrumbs__list li {
+  display: flex;
+  align-items: center;
+}
+
+.breadcrumbs__list li+li::before {
+  content: "/";
+  margin: 0 0.5rem;
+  color: var(--light-grey);
+}
+
+.breadcrumbs a {
+  text-decoration: none;
+  color: var(--secondary-color);
+}
+
+.breadcrumbs a:hover {
+  text-decoration: underline;
+}
+
+.breadcrumbs [aria-current="page"] {
+  font-weight: bold;
+  color: var(--dark-grey);
+}
