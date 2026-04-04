@@ -1,24 +1,38 @@
 import { getParam, loadHeaderFooter } from "./utils.mjs";
-import ProductData from "./ProductData.mjs";
+import ExternalServices from "./ExternalServices.mjs";
 import ProductDetails from "./ProductDetails.mjs";
+import ProductList from "./ProductList.mjs";
 
 loadHeaderFooter();
 
-const dataSource = new ProductData("tents");
-const productId = getParam("product");
+const dataSource = new ExternalServices("tents");
+const productID = getParam("product");
+const searchQuery = getParam("search");
 
-const product = new ProductDetails(productId, dataSource);
-product.init();
+if (searchQuery) {
+  // Search mode: show search results
+  const main = document.querySelector("main");
+  main.innerHTML = `
+    <section class="products">
+      <h2>Search Results for "${searchQuery}"</h2>
+      <ul class="product-list" id="search-results"></ul>
+    </section>`;
+  document.title = `Sleep Outside | Search: ${searchQuery}`;
 
-// console.log(dataSource.findProductById(productId));
+  const listElement = document.getElementById("search-results");
+  const searchService = new ExternalServices();
 
-// // add to cart button event handler
-// async function addToCartHandler(e) {
-//   const product = await dataSource.findProductById(e.target.dataset.id);
-//   addProductToCart(product);
-// }
-
-// // add listener to Add to Cart button
-// document
-//   .getElementById("addToCart")
-//   .addEventListener("click", addToCartHandler);
+  searchService.searchProducts(searchQuery).then((results) => {
+    if (results && results.length > 0) {
+      const productList = new ProductList(searchQuery, dataSource, listElement);
+      productList.renderList(results);
+    } else {
+      listElement.innerHTML = "<p>No products found. Try a different search term.</p>";
+    }
+  }).catch(() => {
+    listElement.innerHTML = "<p>No products found. Try a different search term.</p>";
+  });
+} else if (productID) {
+  const product = new ProductDetails(productID, dataSource);
+  product.init();
+}

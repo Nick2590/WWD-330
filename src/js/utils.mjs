@@ -1,38 +1,51 @@
-// wrapper for querySelector...returns matching element
 export function qs(selector, parent = document) {
   return parent.querySelector(selector);
 }
-// or a more concise version if you are into that sort of thing:
-// export const qs = (selector, parent = document) => parent.querySelector(selector);
 
-// retrieve data from localstorage
 export function getLocalStorage(key) {
   return JSON.parse(localStorage.getItem(key));
 }
-// save data to local storage
+
+export function getCartItems() {
+  const storedCart = getLocalStorage("so-cart");
+
+  if (Array.isArray(storedCart)) {
+    return storedCart;
+  }
+
+  if (storedCart && typeof storedCart === "object") {
+    return [storedCart];
+  }
+
+  return [];
+}
+
 export function setLocalStorage(key, data) {
   localStorage.setItem(key, JSON.stringify(data));
 }
-// set a listener for both touchend and click
+
 export function setClick(selector, callback) {
   qs(selector).addEventListener("touchend", (event) => {
     event.preventDefault();
-    callback();
+    callback(event);
   });
   qs(selector).addEventListener("click", callback);
 }
 
-// get the product id from the query string
 export function getParam(param) {
   const queryString = window.location.search;
   const urlParams = new URLSearchParams(queryString);
-  const product = urlParams.get(param);
-  return product
+  return urlParams.get(param);
 }
 
-export function renderListWithTemplate(template, parentElement, list, position = "afterbegin", clear = false) {
+export function renderListWithTemplate(
+  template,
+  parentElement,
+  list,
+  position = "afterbegin",
+  clear = false
+) {
   const htmlStrings = list.map(template);
-  // if clear is true we need to clear out the contents of the parent.
   if (clear) {
     parentElement.innerHTML = "";
   }
@@ -46,19 +59,75 @@ export function renderWithTemplate(template, parentElement, data, callback) {
   }
 }
 
+export function formDataToJSON(formData) {
+  const data = {};
+  for (const [key, value] of formData.entries()) {
+    data[key] = value;
+  }
+  return data;
+}
+
 async function loadTemplate(path) {
   const res = await fetch(path);
-  const template = await res.text();
-  return template;
+  return await res.text();
 }
 
 export async function loadHeaderFooter() {
-  const headerTemplate = await loadTemplate("/public/partials/header.html");
-  const footerTemplate = await loadTemplate("/public/partials/footer.htnl");
-
   const headerElement = document.querySelector("#main-header");
   const footerElement = document.querySelector("#main-footer");
 
-  renderWithTemplate(headerTemplate, headerElement);
-  renderWithTemplate(footerTemplate, footerElement);
+  if (headerElement) {
+    const headerTemplate = await loadTemplate("/partials/header.html");
+    renderWithTemplate(headerTemplate, headerElement);
+  }
+
+  if (footerElement) {
+    const footerTemplate = await loadTemplate("/partials/footer.html");
+    renderWithTemplate(footerTemplate, footerElement);
+  }
+
+  // Set up search form
+  const searchForm = document.getElementById("search-form");
+  if (searchForm) {
+    searchForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const query = document.getElementById("search-input").value.trim();
+      if (query) {
+        window.location.href = `/product_pages/?search=${encodeURIComponent(query)}`;
+      }
+    });
+  }
+}
+
+export function updateCartCount() {
+  const cartItems = getCartItems();
+  const cartCount = document.getElementById("cart-count");
+  if (cartCount) {
+    const totalItems = cartItems.reduce((sum, item) => {
+      return sum + Number(item.quantity || 1);
+    }, 0);
+    cartCount.textContent = totalItems;
+  }
+}
+
+export function alertMessage(message, scroll = true) {
+  const alert = document.createElement("div");
+  alert.classList.add("alert");
+  alert.innerHTML = `<p>${message}</p><span>X</span>`;
+
+  alert.addEventListener("click", function (e) {
+    if (e.target.tagName == "SPAN") {
+      main.removeChild(this);
+    }
+  });
+
+  const main = document.querySelector("main");
+  main.prepend(alert);
+
+  if (scroll) window.scrollTo(0, 0);
+}
+
+export function removeAllAlerts() {
+  const alerts = document.querySelectorAll(".alert");
+  alerts.forEach((alert) => document.querySelector("main").removeChild(alert));
 }
